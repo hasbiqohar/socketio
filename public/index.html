@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Socket IO chat</title>
+		<style>
+			body {
+				margin : 0;	
+			}
+
+			ul {
+				margin : 10%;
+				padding : 0;
+				width : 80%;
+			}
+
+			form {
+				margin : 0 10%;
+				width : 80%;
+				padding : 0;
+				position : fixed;
+				bottom : 20px;
+				display : flex;
+			}
+
+			input {
+				width : 70%;
+				line-height : 2.5;
+				border : solid thin #ccc;
+			}
+
+			button {
+				width : 30%;
+				padding : 0;	
+				border : none;
+				background : green;
+				color : white;
+			}
+
+			@media screen and (max-width : 768px) {
+				ul {	
+					margin : 10% 10% 20%;
+				}
+			}
+
+		</style>
+	</head>
+	<body>
+		<ul id="messages"></ul>
+		<form id="form" action=""  onsubmit="event.preventDefault();submitForm();" >
+			<input id="m" autocomplete="off" autofocus/>
+			<button type="submit" >Send</button>
+		</form>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io();
+			var form = document.getElementById('form');
+			var input = document.getElementById('m');
+			var messages = document.getElementById('messages');
+
+			function submitForm(e) {
+				
+				socket.emit('chat message', input.value);
+				input.value = '';
+				return false;
+			}
+
+			socket.on('chat message', function(message) {
+				var li = document.createElement('li');
+				li.innerHTML = message;
+				messages.appendChild(li);
+				li.scrollIntoView();
+			});	
+		</script>
+	</body>
+</html>
